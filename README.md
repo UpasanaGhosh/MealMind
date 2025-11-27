@@ -83,20 +83,45 @@ The project uses:
   - Average cooking time per day
   - Recipes revised per plan
 
-### 🧪 6. Agent Evaluation *(Coming Soon)*
+### 🧪 6. Agent Evaluation
 
-MealMind will include evaluation tests for:
-- Constraint adherence (allergies, conditions)
-- Nutrition accuracy (verified via tool calls)
-- Cooking-time optimization
-- Ingredient duplication reduction
+MealMind includes a comprehensive evaluation test suite:
 
-### 🚀 7. Deployment *(Coming Soon)*
+**Constraint Adherence Tests:**
+- Allergen detection (ensures no allergens in recipes)
+- Dietary restriction compliance (vegetarian, gluten-free, etc.)
+- Health condition guidelines validation
+- Cooking time constraint verification
 
-MealMind will support multiple deployment methods:
+**Nutrition Accuracy Tests:**
+- Nutrition lookup accuracy
+- Recipe nutrition calculation
+- Calorie target validation
+- Macro balance verification
+
+**Optimization Tests:**
+- Cooking time analysis
+- Ingredient reuse efficiency
+- Cost estimation accuracy
+- Grocery list aggregation
+- Budget compliance
+
+**Run tests:**
+```bash
+pytest evaluation/ -v
+```
+
+### 🚀 7. Deployment & Notebooks
+
+MealMind supports multiple interfaces:
+
+**Jupyter Notebooks:**
+- `notebooks/demo.ipynb` - Interactive demonstration
+- `notebooks/evaluation.ipynb` - Test results with visualizations
+
+**Deployment Options *(Coming Soon)*:**
 - Streamlit front-end (demo UI)
 - Flask API endpoint
-- Notebook-based agent run on Kaggle
 
 ---
 
@@ -143,14 +168,15 @@ mealmind/
 ├── utils/
 │   └── logger.py                 # ✅ Implemented
 │
-├── evaluation/                   # 🚧 Coming Soon
-│   ├── constraint_tests.py
-│   ├── nutrition_accuracy_tests.py
-│   └── optimization_tests.py
+├── evaluation/                   # ✅ Implemented
+│   ├── __init__.py
+│   ├── constraint_tests.py       # 6 constraint tests
+│   ├── nutrition_accuracy_tests.py # 6 nutrition tests
+│   └── optimization_tests.py     # 10 optimization tests
 │
-├── notebooks/                    # 🚧 Coming Soon
-│   ├── demo.ipynb
-│   └── evaluation.ipynb
+├── notebooks/                    # ✅ Implemented
+│   ├── demo.ipynb                # Interactive demo
+│   └── evaluation.ipynb          # Test visualization
 │
 ├── app/                          # 🚧 Coming Soon
 │   ├── streamlit_app.py
@@ -302,15 +328,32 @@ Open `notebooks/demo.ipynb` and run all cells.
 
 ## 🧪 Testing
 
-Run the test suite:
+### Run Evaluation Suite
 ```bash
-pytest evaluation/
+# Run all tests
+pytest evaluation/ -v
+
+# Run specific test category
+pytest evaluation/constraint_tests.py -v
+pytest evaluation/nutrition_accuracy_tests.py -v
+pytest evaluation/optimization_tests.py -v
+
+# Run with coverage
+pytest --cov=. evaluation/ --cov-report=html
 ```
 
-Run with coverage:
+### Interactive Notebooks
 ```bash
-pytest --cov=mealmind evaluation/
+# Launch Jupyter
+jupyter notebook notebooks/
+
+# Or use JupyterLab
+jupyter lab notebooks/
 ```
+
+**Notebooks include:**
+- `demo.ipynb` - Step-by-step demonstration
+- `evaluation.ipynb` - Test results with charts
 
 ---
 
