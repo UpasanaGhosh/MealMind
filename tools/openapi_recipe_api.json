@@ -1,0 +1,318 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Recipe API",
+    "description": "Mock API for recipe search and retrieval",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/recipes/v1",
+      "description": "Mock Recipe API Server"
+    }
+  ],
+  "paths": {
+    "/search": {
+      "get": {
+        "summary": "Search for recipes",
+        "description": "Search recipes by query, dietary restrictions, and preferences",
+        "operationId": "searchRecipes",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query for recipe name or ingredients",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "diet",
+            "in": "query",
+            "description": "Dietary restriction filter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["vegan", "vegetarian", "gluten-free", "keto", "paleo", "low-carb", "dairy-free"]
+            }
+          },
+          {
+            "name": "maxTime",
+            "in": "query",
+            "description": "Maximum cooking time in minutes",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "excludeIngredients",
+            "in": "query",
+            "description": "Comma-separated list of ingredients to exclude",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cuisine",
+            "in": "query",
+            "description": "Cuisine type filter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["italian", "mexican", "asian", "indian", "mediterranean", "american"]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with recipe list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RecipeSummary"
+                      }
+                    },
+                    "totalResults": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "get": {
+        "summary": "Get recipe details",
+        "description": "Retrieve detailed information about a specific recipe",
+        "operationId": "getRecipeById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Recipe ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with recipe details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      }
+    },
+    "/recipes/{id}/nutrition": {
+      "get": {
+        "summary": "Get recipe nutrition information",
+        "description": "Retrieve nutritional information for a specific recipe",
+        "operationId": "getRecipeNutrition",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Recipe ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with nutrition data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RecipeSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique recipe identifier"
+          },
+          "title": {
+            "type": "string",
+            "description": "Recipe title"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to recipe image"
+          },
+          "readyInMinutes": {
+            "type": "integer",
+            "description": "Total cooking time in minutes"
+          },
+          "servings": {
+            "type": "integer",
+            "description": "Number of servings"
+          },
+          "diets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of diet labels"
+          }
+        }
+      },
+      "RecipeDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "readyInMinutes": {
+            "type": "integer"
+          },
+          "servings": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Recipe description"
+          },
+          "diets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cuisines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "instructions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "integer"
+                },
+                "step": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NutritionInfo": {
+        "type": "object",
+        "properties": {
+          "calories": {
+            "type": "number",
+            "description": "Total calories"
+          },
+          "protein": {
+            "type": "number",
+            "description": "Protein in grams"
+          },
+          "carbohydrates": {
+            "type": "number",
+            "description": "Carbohydrates in grams"
+          },
+          "fat": {
+            "type": "number",
+            "description": "Fat in grams"
+          },
+          "fiber": {
+            "type": "number",
+            "description": "Fiber in grams"
+          },
+          "sugar": {
+            "type": "number",
+            "description": "Sugar in grams"
+          },
+          "sodium": {
+            "type": "number",
+            "description": "Sodium in milligrams"
+          }
+        }
+      }
+    }
+  }
+}
